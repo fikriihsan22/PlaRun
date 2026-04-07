@@ -1,0 +1,37 @@
+# Xcode user data
+xcuserdata/
+*.xcuserstate
+
+# Xcode workspace user data
+*.xcworkspace/xcuserdata/
+
+# Derived data (build cache)
+DerivedData/
+
+# Build folder
+build/
+
+# Swift Package Manager
+.swiftpm/
+.build/
+
+# CocoaPods (kalau pakai)
+Pods/
+
+# Carthage (kalau pakai)
+Carthage/Build/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Temporary files
+*.swp
