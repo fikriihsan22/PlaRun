@@ -11,6 +11,8 @@ protocol WelcomeUseCaseProtocol {
 
 extension OnboardingUseCase: WelcomeUseCaseProtocol {
     func createNewUserSession(email: String, nickname: String) {
-        sessionManager.saveSession(Session(id: UUID(), email: email, nickname: nickname))
+        sessionManager.saveSession(Session(id: UUID(),
+                                           email: email,
+                                           nickname: nickname))
     }
 }

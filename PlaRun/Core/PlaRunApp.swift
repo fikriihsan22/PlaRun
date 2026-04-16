@@ -15,12 +15,13 @@ struct PlaRunApp: App {
 
     var body: some Scene {
         WindowGroup {
-            AppCoordinator(flow: isUserLoggedIn() ? .main : .onBoarding, sessionManager: sessionManager, container: AppContainer(sessionManager)).start()
+            AppCoordinator(flow: isUserLoggedIn() ? .main : .onBoarding,
+                           sessionManager: sessionManager,
+                           container: AppContainer(sessionManager)).start()
         }
     }
 
     func isUserLoggedIn() -> Bool {
-        guard let session = sessionManager.getSession() else {return false}
-        return true
+        return sessionManager.getSession() != nil
     }
 }

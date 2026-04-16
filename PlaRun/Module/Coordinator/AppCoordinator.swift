@@ -27,7 +27,8 @@ final class AppCoordinator: ObservableObject {
     func start() -> some View {
         switch flow {
         case .onBoarding:
-            OnboardingCoordinator(container: container, session: sessionManager) {[weak self] in
+            OnboardingCoordinator(container: container,
+                                  session: sessionManager) { [weak self] in
                 self?.flow = .main
             }.start()
 
