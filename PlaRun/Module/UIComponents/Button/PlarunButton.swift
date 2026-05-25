@@ -18,7 +18,7 @@ struct PlarunButton: View {
         ZStack {
             Button(action: onClick) {
                 Text(title)
-                    .foregroundColor(Color.black)
+                    .foregroundColor(PlarunColor.black.color)
                     .frame(maxWidth: .infinity)
                     .frame(height: buttonHeight)
                     .background(bgStyle.color)
