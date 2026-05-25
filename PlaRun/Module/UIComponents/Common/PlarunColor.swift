@@ -22,15 +22,15 @@ enum PlarunColor {
         case .secondary:
             return Color(hex: "F2F5F7")
         case .warning:
-            return Color(hex: "")
+            return Color(hex: "F59E0B")
         case .success:
-            return Color(hex: "")
+            return Color(hex: "2EAD6B")
         case .black:
-            return Color.black
+            return Color(hex: "000000")
         case .blackV2:
             return Color(hex: "23262E")
         case .white:
-            return Color.white
+            return Color(hex: "FFFFFF")
         }
     }
 }
@@ -38,8 +38,15 @@ enum PlarunColor {
 extension Color {
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: .alphanumerics.inverted)
+        let validCharacters = CharacterSet(charactersIn: "0123456789ABCDEFabcdef")
         var int: UInt64 = 0
-        Scanner(string: hex).scanHexInt64(&int)
+        guard (hex.count == 6 || hex.count == 8),
+              hex.rangeOfCharacter(from: validCharacters.inverted) == nil,
+              Scanner(string: hex).scanHexInt64(&int) else {
+            assertionFailure("Invalid hex color: \(hex)")
+            self = .clear
+            return
+        }
 
         let a, r, g, b: UInt64
         switch hex.count {
