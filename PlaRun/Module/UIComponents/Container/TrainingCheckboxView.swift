@@ -8,27 +8,33 @@
 import SwiftUI
 
 struct TrainingCheckboxView: View {
-    @State var isChecked: Bool = false
-    var checkedOnClick: () -> Void = { }
-    let data: TrainingCheckboxData
+    @Binding private var isChecked: Bool
+    private let data: TrainingCheckboxData
+    private let onToggle: (Bool) -> Void
+
+    init(
+        isChecked: Binding<Bool>,
+        data: TrainingCheckboxData,
+        onToggle: @escaping (Bool) -> Void = { _ in }
+    ) {
+        self._isChecked = isChecked
+        self.data = data
+        self.onToggle = onToggle
+    }
 
     var body: some View {
         HStack(spacing: 8) {
             Button(action: {
-                isChecked = !isChecked
-                checkedOnClick()
+                isChecked.toggle()
+                onToggle(isChecked)
             }) {
-                if isChecked {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 16))
-                        .foregroundColor(data.color.color)
-                }
-                else {
-                    Image(systemName: "circle")
-                        .font(.system(size: 16))
-                        .foregroundColor(data.color.color)
-                }
+                Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
+                    .font(.system(size: 16))
+                    .foregroundColor(data.color.color)
             }
+            .accessibilityLabel(data.title)
+            .accessibilityValue(isChecked ? "Checked" : "Unchecked")
+            .accessibilityHint("Toggles training completion")
 
             Text(data.title)
                 .font(PlarunFont.Body.regular.font)
@@ -46,5 +52,10 @@ struct TrainingCheckboxData {
 }
 
 #Preview {
-    TrainingCheckboxView(data:TrainingCheckboxData(title: "Longrun - 44Km"))
+    @Previewable @State var isChecked = false
+
+    TrainingCheckboxView(
+        isChecked: $isChecked,
+        data: TrainingCheckboxData(title: "Longrun - 44Km")
+    )
 }
