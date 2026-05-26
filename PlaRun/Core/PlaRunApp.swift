@@ -18,6 +18,14 @@ struct PlaRunApp: App {
             AppCoordinator(flow: isUserLoggedIn() ? .main : .onBoarding,
                            sessionManager: sessionManager,
                            container: AppContainer(sessionManager)).start()
+            // Register local database models once at the app root.
+                .modelContainer(for: [
+                    UserEntity.self,
+                    TrainingPlanEntity.self,
+                    TrainingPlanWeeklyEntity.self,
+                    TrainingWorkoutEntity.self,
+                    TrainingTypeEntity.self
+                ])
         }
     }
 

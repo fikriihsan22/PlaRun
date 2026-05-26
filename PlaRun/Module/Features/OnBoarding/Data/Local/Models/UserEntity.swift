@@ -9,13 +9,38 @@ import Foundation
 
 @Model
 class UserEntity {
-    var id: UUID
+    @Attribute(.unique) var id: UUID
+    @Attribute(.unique) var email: String
     var nickname: String
-    var email: String
+    var createdAt: Date
+    var updatedAt: Date
+    var activePlanId: UUID?
+    var preferredDistanceUnit: String
+    var preferredPaceUnit: String
 
-    init(nickname: String, email: String) {
-        self.id = UUID()
+    // User is the root owner for training plans in the local database.
+    @Relationship(deleteRule: .cascade, inverse: \TrainingPlanEntity.user)
+    var trainingPlans: [TrainingPlanEntity]
+
+    init(
+        id: UUID = UUID(),
+        nickname: String,
+        email: String,
+        createdAt: Date = Date(),
+        updatedAt: Date = Date(),
+        activePlanId: UUID? = nil,
+        preferredDistanceUnit: String = "KM",
+        preferredPaceUnit: String = "min/km",
+        trainingPlans: [TrainingPlanEntity] = []
+    ) {
+        self.id = id
         self.nickname = nickname
         self.email = email
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.activePlanId = activePlanId
+        self.preferredDistanceUnit = preferredDistanceUnit
+        self.preferredPaceUnit = preferredPaceUnit
+        self.trainingPlans = trainingPlans
     }
 }
