@@ -15,8 +15,25 @@ class TrainingPlanLocalDataSource {
     }
 
     func fetchAll() -> [TrainingPlanEntity] {
-        let descriptor = FetchDescriptor<TrainingPlanEntity>()
+        let descriptor = FetchDescriptor<TrainingPlanEntity>(
+            sortBy: [SortDescriptor(\.raceDate)]
+        )
         return (try? context.fetch(descriptor)) ?? []
+    }
+
+    func fetchByUserId(_ userId: UUID) -> [TrainingPlanEntity] {
+        let descriptor = FetchDescriptor<TrainingPlanEntity>(
+            predicate: #Predicate { $0.userId == userId },
+            sortBy: [SortDescriptor(\.raceDate)]
+        )
+        return (try? context.fetch(descriptor)) ?? []
+    }
+
+    func fetchById(_ id: UUID) -> TrainingPlanEntity? {
+        let descriptor = FetchDescriptor<TrainingPlanEntity>(
+            predicate: #Predicate { $0.id == id }
+        )
+        return try? context.fetch(descriptor).first
     }
 
     func save(_ trainingPlan: TrainingPlanEntity) {
@@ -27,20 +44,16 @@ class TrainingPlanLocalDataSource {
         context.delete(trainingPlan)
     }
 
-    func update(id: UUID,trainingPlan: TrainingPlanEntity) {
-        let descripton = FetchDescriptor<TrainingPlanEntity>(
-            predicate: #Predicate{ $0.id == id }
-        )
+    func update(id: UUID, trainingPlan: TrainingPlanEntity) {
+        guard let data = fetchById(id) else { return }
 
-        if let data = try? context.fetch(descripton).first {
-            data.date = trainingPlan.date
-            data.note = trainingPlan.note
-            data.title = trainingPlan.title
-            data.type = trainingPlan.type
-            data.isComplete = trainingPlan.isComplete
-            data.distance = trainingPlan.distance
-            data.distanceUnit = trainingPlan.distanceUnit
-
-        }
+        // Only update plan metadata here; weekly/workout data has its own data source.
+        data.title = trainingPlan.title
+        data.targetDescription = trainingPlan.targetDescription
+        data.targetDistance = trainingPlan.targetDistance
+        data.targetDistanceUnit = trainingPlan.targetDistanceUnit
+        data.targetPace = trainingPlan.targetPace
+        data.totalWeeks = trainingPlan.totalWeeks
+        data.raceDate = trainingPlan.raceDate
     }
 }

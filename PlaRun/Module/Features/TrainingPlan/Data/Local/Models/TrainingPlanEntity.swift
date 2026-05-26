@@ -1,5 +1,5 @@
 //
-//  TrainingItemModel.swift
+//  TrainingPlanEntity.swift
 //  PlaRun
 //
 //  Created by Fikri Ihsan A on 06/04/26.
@@ -9,25 +9,49 @@ import Foundation
 
 @Model
 class TrainingPlanEntity {
-    var id: UUID
+    @Attribute(.unique) var id: UUID
     var userId: UUID
-    var type: TrainingTypeEntity
-    var date: Date
     var title: String
-    var note: String
-    var isComplete: Bool
-    var distance: Double?
-    var distanceUnit: String
+    var targetDescription: String
+    var targetDistance: Double
+    var targetPace: String
+    var totalWeeks: Int
+    var raceDate: Date
+    var user: UserEntity?
 
-    init(userId:UUID, type: TrainingTypeEntity, date: Date, title: String, note:String,isComplete:Bool,distance: Double? = nil, distanceUnit: String = "KM") {
-        self.userId = userId
+    // A training plan owns the weekly buckets shown on the overview screen.
+    @Relationship(deleteRule: .cascade, inverse: \TrainingPlanWeeklyEntity.plan)
+    var weeks: [TrainingPlanWeeklyEntity]
+
+    init(
+        userId: UUID,
+        title: String,
+        targetDescription: String,
+        targetDistance: Double,
+        targetPace: String,
+        totalWeeks: Int,
+        raceDate: Date,
+        user: UserEntity? = nil,
+        weeks: [TrainingPlanWeeklyEntity] = []
+    ) {
         self.id = UUID()
-        self.type = type
-        self.date = date
+        self.userId = userId
         self.title = title
-        self.note = note
-        self.isComplete = isComplete
-        self.distance = distance
-        self.distanceUnit = distanceUnit
+        self.targetDescription = targetDescription
+        self.targetDistance = targetDistance
+        self.targetPace = targetPace
+        self.totalWeeks = totalWeeks
+        self.raceDate = raceDate
+        self.user = user
+        self.weeks = weeks
     }
+}
+
+enum TrainingType: String, Codable, CaseIterable {
+    case easyRun
+    case longRun
+    case tempoRun
+    case thresholdRun
+    case strengthLower
+    case strengthCore
 }
